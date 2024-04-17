@@ -1,0 +1,63 @@
+using Xunit;
+using BillSplit;
+
+namespace BillPayment.Tests
+{
+    public class PaymentSplitterTests
+    {
+        [Fact]
+        public void CalculateTipPerPerson_ValidInput_ReturnsCorrectTipPerPerson()
+        {
+            // Arrange
+            var splitter = new PaymentSplitter();
+            decimal price = 100m;
+            int numberOfPatrons = 5;
+            float tipPercentage = 15f;
+
+            // Act
+            decimal tipPerPerson = splitter.CalculateTipPerPerson(price, numberOfPatrons, tipPercentage);
+
+            // Assert
+            Assert.Equal(3m, tipPerPerson);
+        }
+
+        [Fact]
+        public void CalculateTipPerPerson_ZeroPrice_ThrowsArgumentException()
+        {
+            // Arrange
+            var splitter = new PaymentSplitter();
+            decimal price = 0m;
+            int numberOfPatrons = 5;
+            float tipPercentage = 15f;
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => splitter.CalculateTipPerPerson(price, numberOfPatrons, tipPercentage));
+        }
+
+        [Fact]
+        public void CalculateTipPerPerson_ZeroPatrons_ThrowsArgumentException()
+        {
+            // Arrange
+            var splitter = new PaymentSplitter();
+            decimal price = 100m;
+            int numberOfPatrons = 0;
+            float tipPercentage = 15f;
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => splitter.CalculateTipPerPerson(price, numberOfPatrons, tipPercentage));
+        }
+
+        [Fact]
+        public void CalculateTipPerPerson_NegativeTipPercentage_ThrowsArgumentException()
+        {
+            // Arrange
+            var splitter = new PaymentSplitter();
+            decimal price = 100m;
+            int numberOfPatrons = 5;
+            float tipPercentage = -15f;
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => splitter.CalculateTipPerPerson(price, numberOfPatrons, tipPercentage));
+        }
+    }
+}

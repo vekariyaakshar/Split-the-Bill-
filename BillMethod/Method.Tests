@@ -1,0 +1,64 @@
+using Xunit;
+using BillSplit;
+using System.Collections.Generic;
+
+namespace Method.Tests
+{
+    public class PaymentSplitterTests
+    {
+        [Fact]
+        public void CalculateTips_WithValidInputs_ReturnsCorrectTipAmounts()
+        {
+           
+            var splitter = new PaymentSplitter();
+            var mealCosts = new Dictionary<string, decimal>
+            {
+                { "Alice", 120.50m },
+                { "Bob", 75.25m }
+            };
+            float tipPercentage = 15.0f;
+
+            var result = splitter.CalculateTips(mealCosts, tipPercentage);
+
+            
+            Assert.Equal(18.08m, result["Alice"]);
+            Assert.Equal(11.29m, result["Bob"]);
+        }
+
+        [Fact]
+        public void CalculateTips_WithZeroTipPercentage_ReturnsZeroTips()
+        {
+
+            var splitter = new PaymentSplitter();
+            var mealCosts = new Dictionary<string, decimal>
+            {
+                { "Alice", 120.50m },
+                { "Bob", 75.25m }
+            };
+            float tipPercentage = 0.0f;
+
+            
+            var result = splitter.CalculateTips(mealCosts, tipPercentage);
+
+            
+            Assert.Equal(0m, result["Alice"]);
+            Assert.Equal(0m, result["Bob"]);
+        }
+
+        [Fact]
+        public void CalculateTips_WithNegativeTipPercentage_ThrowsArgumentException()
+        {
+           
+            var splitter = new PaymentSplitter();
+            var mealCosts = new Dictionary<string, decimal>
+            {
+                { "Alice", 120.50m },
+                { "Bob", 75.25m }
+            };
+            float tipPercentage = -5.0f;
+
+            
+            Assert.Throws<ArgumentException>(() => splitter.CalculateTips(mealCosts, tipPercentage));
+        }
+    }
+}
